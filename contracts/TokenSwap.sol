@@ -22,12 +22,18 @@ interface IERC20 {
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
 }
 
+
+
 contract TokenSwap {
     address private owner;
     IUniswapV2Router02 public uniswapRouter;
 
     // Устанавливаем адрес Uniswap Router (для тестовой сети Rinkeby используем этот адрес)
-    address private constant UNISWAP_ROUTER_ADDRESS = 0x5C69bEe701ef814a2B6a3EDD3B8b3D3e6C5F20C4;
+    address private constant UNISWAP_ROUTER_ADDRESS = 0x5c69BEe701ef814A2b6a3eDD3b8b3D3e6c5f20c4;
+
+    mapping(address => uint256) public balances;
+
+    
 
     // Событие для отслеживания успешного обмена
     event TokensSwapped(address tokenIn, address tokenOut, uint amountIn, uint amountOut);
@@ -48,7 +54,7 @@ contract TokenSwap {
         IERC20(tokenIn).approve(address(uniswapRouter), amountIn);
 
         // Путь обмена токенов (из tokenIn в tokenOut)
-        address;
+        address[] memory path = new address[](2);
         path[0] = tokenIn;
         path[1] = tokenOut;
 
@@ -67,7 +73,8 @@ contract TokenSwap {
 
     // Функция для получения минимального количества токенов, которое можно получить за заданное количество токенов
     function getAmountOutMin(address tokenIn, address tokenOut, uint amountIn) external view returns (uint) {
-        address;
+        //address;
+        address[] memory path = new address[](2);
         path[0] = tokenIn;
         path[1] = tokenOut;
         
@@ -75,8 +82,14 @@ contract TokenSwap {
         return amountsOut[1];
     }
 
-    // Функция для вывода токенов на адрес владельца контракта
+    /*// Функция для вывода токенов на адрес владельца контракта
     function withdrawTokens(address token, uint amount) external onlyOwner {
         IERC20(token).transfer(msg.sender, amount);
+    }*/
+
+    function withdraw() external {
+        require(msg.sender == owner, "Only owner can withdraw");
+        payable(msg.sender).transfer(balances[owner]);
+        balances[owner] = 0;
     }
 }

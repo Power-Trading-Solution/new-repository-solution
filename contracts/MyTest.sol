@@ -32,12 +32,12 @@ contract CapitalManagement {
     }
 
     // Обмен токенов (пример - предполагается наличие внешнего контракта ERC20)
-    function exchangeTokens(address _tokenAddress, uint256 _amount) public onlyOwner {
+    /*function exchangeTokens(address _tokenAddress, uint256 _amount) public onlyOwner {
         // Здесь должна быть реализация обмена токенов, например, через взаимодействие с контрактом ERC20
         //  IERC20(_tokenAddress).transferFrom(msg.sender, address(this), _amount);  //  Пример, требует импорта IERC20
         //  Это место требует более подробной реализации в зависимости от конкретного токена и способа обмена
         require(true, "Exchange token implementation missing"); // Заглушка
-    }
+    }*/
 
 
     // Функция для добавления пользователя (только для владельца)

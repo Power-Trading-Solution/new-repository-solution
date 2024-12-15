@@ -2,7 +2,7 @@
 pragma solidity ^0.8.28;
 
 // Uncomment this line to use console.log
-// import "hardhat/console.sol";
+import "../node_modules/hardhat/console.sol";
 
 contract Lock {
     uint public unlockTime;
@@ -30,5 +30,9 @@ contract Lock {
         emit Withdrawal(address(this).balance, block.timestamp);
 
         owner.transfer(address(this).balance);
+    }
+
+    function getOwner() public view {
+        console.log(owner);
     }
 }
