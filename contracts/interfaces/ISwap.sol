@@ -20,4 +20,9 @@ interface ISwap {
     //что значит они могут быть вызваны из других контрактов посредством message call. Вызванный контракт получит чистую копию memory 
     //и доступ к данным payload, которые будут расположены в отдельной секции — calldata. После завершения выполнения, возвращаемые данные будут размещены 
     //в заранее выделенном вызвавшим контрактом месте в memory.
+
+    function getAmountsOut(
+        uint256 amountIn, 
+        address[] calldata path
+    ) external view returns (uint256[] memory amounts);
 }

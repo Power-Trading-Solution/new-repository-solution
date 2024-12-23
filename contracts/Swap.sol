@@ -5,7 +5,7 @@ import {ISwap} from './interfaces/ISwap.sol';
 import './interfaces/IERC20.sol';
 import './interfaces/IWETH.sol';
 
-contract MyTest {
+contract Swap {
     address private constant UNISWAP_V2_ROUTER =
         0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
 
@@ -111,5 +111,13 @@ contract MyTest {
         }
 
         return amounts[2];
+    }
+
+    function getAmountsOut(
+        uint256 amountIn, 
+        address[] calldata path
+    ) external view returns (uint[] memory amounts) {
+        amounts = router.getAmountsOut(amountIn, path);
+        return amounts;
     }
 }
