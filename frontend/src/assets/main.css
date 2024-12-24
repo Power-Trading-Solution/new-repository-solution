@@ -7,6 +7,11 @@
   font-weight: normal;
 }
 
+body {
+  background-color: black; /* Добавляем !important, чтобы переопределить любые другие стили */
+  color: white; /* Белый цвет текста на черном фоне */
+}
+
 a,
 .green {
   text-decoration: none;
