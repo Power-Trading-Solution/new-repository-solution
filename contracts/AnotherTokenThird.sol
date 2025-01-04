@@ -1,0 +1,67 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.26;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract AnotherTokenThird is ERC20, Ownable {
+
+    uint256 public tokensPerLETH;
+    uint256 public tokensPerUSDS;
+    uint256 public tokensPerMTS;
+    uint256 public tokensPerMTF;
+    uint256 public tokensPerATF;
+    uint256 public tokensPerLTF;
+
+
+    constructor(uint256 initialSupply, uint256 _tokensPerLETH, uint256 _tokensPerUSDS, uint256 _tokensPerMTS, uint256 _tokensPerMTF, uint256 _tokensPerATF, uint256 _tokensPerLTF) ERC20("AnotherTokenThird", "ATT") Ownable(msg.sender) {
+        _mint(msg.sender, initialSupply);
+        tokensPerLETH = _tokensPerLETH;
+        tokensPerUSDS = _tokensPerUSDS;
+        tokensPerMTS = _tokensPerMTS;
+        tokensPerMTF = _tokensPerMTF;
+        tokensPerATF = _tokensPerATF;
+        tokensPerLTF = _tokensPerLTF;
+    }
+
+    function buyTokens() public payable {
+        require(msg.value > 0, "Send LETH to purchase tokens");
+        uint256 tokensToBuy = msg.value * tokensPerLETH;
+        require(balanceOf(owner()) >= tokensToBuy, "Not enough tokens available");
+        _transfer(owner(), msg.sender, tokensToBuy);
+    }
+
+    function setTokensPerLETH(uint256 _tokensPerLETH) public onlyOwner {
+        tokensPerLETH = _tokensPerLETH;
+    }
+
+    function setTokensPerUSDS(uint256 _tokensPerUSDS) public onlyOwner {
+        tokensPerUSDS = _tokensPerUSDS;
+    }
+
+    function setTokensPerMTS(uint256 _tokensPerMTS) public onlyOwner {
+        tokensPerMTS = _tokensPerMTS;
+    }
+
+    function setTokensPerMTF(uint256 _tokensPerMTF) public onlyOwner {
+        tokensPerMTF = _tokensPerMTF;
+    }
+
+    function setTokensPerATF(uint256 _tokensPerATF) public onlyOwner {
+        tokensPerATF = _tokensPerATF;
+    }
+
+    function setTokensPerLTF(uint256 _tokensPerLTF) public onlyOwner {
+        tokensPerLTF = _tokensPerLTF;
+    }
+
+    function mint(uint256 amount) public onlyOwner {
+        _mint(msg.sender, amount);
+    }
+    
+    function burn(uint256 amount) public {
+        _burn(msg.sender, amount);
+    }
+
+
+}

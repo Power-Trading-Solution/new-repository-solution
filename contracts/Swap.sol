@@ -1,123 +1,180 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.26;
 
-import {ISwap} from './interfaces/ISwap.sol';
-import './interfaces/IERC20.sol';
-import './interfaces/IWETH.sol';
+import {MyTokenFirst} from "./MyTokenFirst.sol";
+import {MyTokenSecond} from "./MyTokenSecond.sol";
+import {IERC20} from "./interfaces/IERC20.sol";
+import {AnotherTokenThird} from "./AnotherTokenThird.sol";
+import {AnotherTokenFourth} from "./AnotherTokenFourth.sol";
+import {LastTokenFifth} from "./LastTokenFifth.sol";
 
 contract Swap {
-    address private constant UNISWAP_V2_ROUTER =
-        0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
+    address public token0;
+    address public token1;
+    uint256 public reserve0;
+    uint256 public reserve1;
 
-    address private constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
-    address private constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
-    address constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
+    MyTokenFirst public tokenMTF;
+    MyTokenSecond public tokenMTS;
+    AnotherTokenThird public tokenATT;
+    AnotherTokenFourth public tokenATF;
+    LastTokenFifth public tokenLTF;
+    address public tokenUSDS;
 
-    ISwap private router = ISwap(UNISWAP_V2_ROUTER);
-    IERC20 private weth = IERC20(WETH);
-    IERC20 private dai = IERC20(DAI);
-
-    // Swap WETH to DAI
-    function swapSingleHopExactAmountIn(uint256 amountIn, uint256 amountOutMin) //пользователь вводит сколько хочет обменять
-        external
-        returns (uint256 amountOut)
-    {
-        weth.transferFrom(msg.sender, address(this), amountIn); //msg.sender - текущий аккаунт
-        weth.approve(address(router), amountIn);
-
-        address[] memory path;
-        path = new address[](2);
-        path[0] = WETH;
-        path[1] = DAI;
-
-        uint256[] memory amounts = router.swapExactTokensForTokens(
-            amountIn, amountOutMin, path, msg.sender, block.timestamp
-        );
-
-        // amounts[0] = WETH amount, amounts[1] = DAI amount
-        return amounts[1];
+    constructor(address _token0, address _token1, address _tokenMTF, address _tokenMTS, address _tokenATT, address _tokenATF, address _tokenLTF, address _tokenUSDS) {
+        token0 = _token0;
+        token1 = _token1;
+        tokenMTF = MyTokenFirst(_tokenMTF);
+        tokenMTS = MyTokenSecond(_tokenMTS);
+        tokenATT = AnotherTokenThird(_tokenATT);
+        tokenATF = AnotherTokenFourth(_tokenATF);
+        tokenLTF = LastTokenFifth(_tokenLTF);
+        tokenUSDS = _tokenUSDS;
     }
 
-    // Swap DAI -> WETH -> USDC
-    function swapMultiHopExactAmountIn(uint256 amountIn, uint256 amountOutMin)
-        external
-        returns (uint256 amountOut)
-    {
-        dai.transferFrom(msg.sender, address(this), amountIn);
-        dai.approve(address(router), amountIn);
-
-        address[] memory path;
-        path = new address[](3);
-        path[0] = DAI;
-        path[1] = WETH;
-        path[2] = USDC;
-
-        uint256[] memory amounts = router.swapExactTokensForTokens(
-            amountIn, amountOutMin, path, msg.sender, block.timestamp
-        );
-
-        // amounts[0] = DAI amount
-        // amounts[1] = WETH amount
-        // amounts[2] = USDC amount
-        return amounts[2];
+    function setTokens(address _token0, address _token1) external {
+        token0 = _token0;
+        token1 = _token1;
     }
 
-    // Swap WETH to DAI
-    function swapSingleHopExactAmountOut(
-        uint256 amountOutDesired,
-        uint256 amountInMax
-    ) external returns (uint256 amountOut) {
-        weth.transferFrom(msg.sender, address(this), amountInMax);
-        weth.approve(address(router), amountInMax);
+    function addLiquidity(uint256 amount0, uint256 amount1) external {
+        require(IERC20(token0).transferFrom(msg.sender, address(this), amount0), "Transfer of token0 failed");
+        require(IERC20(token1).transferFrom(msg.sender, address(this), amount1), "Transfer of token1 failed");
 
-        address[] memory path;
-        path = new address[](2);
-        path[0] = WETH;
-        path[1] = DAI;
+        reserve0 += amount0;
+        reserve1 += amount1;
+    }
 
-        uint256[] memory amounts = router.swapTokensForExactTokens(
-            amountOutDesired, amountInMax, path, msg.sender, block.timestamp
-        );
+    function getReserves() external view returns (uint256, uint256) {
+        return (reserve0, reserve1);
+    }
 
-        // Refund WETH to msg.sender
-        if (amounts[0] < amountInMax) {
-            weth.transfer(msg.sender, amountInMax - amounts[0]);
+    function swap(uint256 amountIn, address tokenOut) external {
+        require(amountIn > 0, "Amount in must be greater than zero");
+        require(tokenOut == token0 || tokenOut == token1, "Invalid token for swap");
+
+        if (tokenOut == token0) {
+            require(reserve1 >= amountIn, "Insufficient reserve for token1");
+            reserve1 -= amountIn;
+            require(IERC20(token0).transfer(msg.sender, amountIn), "Transfer failed");
+        } else {
+            require(reserve0 >= amountIn, "Insufficient reserve for token0");
+            reserve0 -= amountIn;
+            require(IERC20(token1).transfer(msg.sender, amountIn), "Transfer failed");
         }
-
-        return amounts[1];
     }
 
-    // Swap DAI -> WETH -> USDC
-    function swapMultiHopExactAmountOut(
-        uint256 amountOutDesired,
-        uint256 amountInMax
-    ) external returns (uint256 amountOut) {
-        dai.transferFrom(msg.sender, address(this), amountInMax);
-        dai.approve(address(router), amountInMax);
+    function swapExactTokensForTokens(
+        uint amountIn,
+        uint amountOutMin,
+        address[] calldata path,
+        address to,
+        uint deadline
+    ) external returns (uint256[] memory amounts) {
 
-        address[] memory path;
-        path = new address[](3);
-        path[0] = DAI;
-        path[1] = WETH;
-        path[2] = USDC;
+        // Проверка, что путь содержит как минимум 2 токена
+        require(path.length >= 2, "Invalid path");
+    
+        // Проверка, что текущий блок не превышает deadline
+        require(block.timestamp <= deadline, "Transaction expired");
 
-        uint256[] memory amounts = router.swapTokensForExactTokens(
-            amountOutDesired, amountInMax, path, msg.sender, block.timestamp
-        );
+        uint256 amountOut = this.getAmountsOut(amountIn, path);
+        require(amountOut >= amountOutMin, "Insufficient output amount");
 
-        // Refund DAI to msg.sender
-        if (amounts[0] < amountInMax) {
-            dai.transfer(msg.sender, amountInMax - amounts[0]);
-        }
+        IERC20(path[0]).transferFrom(to, address(this), amountIn);
+        IERC20(path[1]).transfer(to, amountOut);
 
-        return amounts[2];
+        // Здесь можно добавить логику для мока функции
+        // Например, просто возвращаем массив с начальным значением и увеличенным на 1
+        amounts = new uint[](path.length);
+        amounts[0] = amountIn; // например, суммы входящих токенов
+        amounts[1] = amountOut; // предполагаемая сумма выходящих токенов, для примера
+
+        return amounts;
     }
 
     function getAmountsOut(
         uint256 amountIn, 
         address[] calldata path
-    ) external view returns (uint[] memory amounts) {
-        amounts = router.getAmountsOut(amountIn, path);
-        return amounts;
+    ) external       view
+returns (uint256 amount) {
+
+        if (MyTokenSecond(path[0]) == tokenMTS) {
+            if (MyTokenFirst(path[1]) == tokenMTF) 
+                amount = amountIn*tokenMTS.tokensPerMTF();
+            if (AnotherTokenThird(path[1]) == tokenATT)
+                amount = amountIn*tokenMTS.tokensPerATT();
+            if (AnotherTokenFourth(path[1])== tokenATF)
+                amount = amountIn*tokenMTS.tokensPerATF();
+            if (LastTokenFifth(path[1]) == tokenLTF)
+                amount = amountIn*tokenMTS.tokensPerLTF();
+            if (path[1] == tokenUSDS)
+                amount = amountIn*tokenMTS.tokensPerUSDS();
+        }
+
+        if (MyTokenFirst(path[0]) == tokenMTF) {
+            if (MyTokenSecond(path[1]) == tokenMTS)
+                amount = amountIn*tokenMTF.tokensPerMTS();
+            if (AnotherTokenThird(path[1]) == tokenATT)
+                amount = amountIn*tokenMTF.tokensPerATT();
+            if (AnotherTokenFourth(path[1])== tokenATF)
+                amount = amountIn*tokenMTF.tokensPerATF();
+            if (LastTokenFifth(path[1]) == tokenLTF)
+                amount = amountIn*tokenMTF.tokensPerLTF();
+            if (path[1] == tokenUSDS)
+                amount = amountIn*tokenMTF.tokensPerUSDS();
+        }
+
+        if (AnotherTokenThird(path[0]) == tokenATT) {
+            if (MyTokenSecond(path[1]) == tokenMTS)
+                amount = amountIn*tokenATT.tokensPerMTS();
+            if (MyTokenFirst(path[1]) == tokenMTF) 
+                amount = amountIn*tokenATT.tokensPerMTF();
+            if (AnotherTokenFourth(path[1])== tokenATF)
+                amount = amountIn*tokenATT.tokensPerATF();
+            if (LastTokenFifth(path[1]) == tokenLTF)
+                amount = amountIn*tokenATT.tokensPerLTF();
+            if (path[1] == tokenUSDS)
+                amount = amountIn*tokenATT.tokensPerUSDS();
+        }
+
+        if (AnotherTokenFourth(path[0]) == tokenATF) {
+            if (MyTokenSecond(path[1]) == tokenMTS)
+                amount = amountIn*tokenATF.tokensPerMTS();
+            if (MyTokenFirst(path[1]) == tokenMTF) 
+                amount = amountIn*tokenATF.tokensPerMTF();
+            if (AnotherTokenThird(path[1]) == tokenATT)
+                amount = amountIn*tokenATF.tokensPerATT();
+            if (LastTokenFifth(path[1]) == tokenLTF)
+                amount = amountIn*tokenATF.tokensPerLTF();
+            if (path[1] == tokenUSDS)
+                amount = amountIn*tokenATF.tokensPerUSDS();
+        }
+
+        if (LastTokenFifth(path[0]) == tokenLTF) {
+            if (MyTokenSecond(path[1]) == tokenMTS)
+                amount = amountIn*tokenLTF.tokensPerMTS();
+            if (MyTokenFirst(path[1]) == tokenMTF) 
+                amount = amountIn*tokenLTF.tokensPerMTF();
+            if (AnotherTokenThird(path[1]) == tokenATT)
+                amount = amountIn*tokenLTF.tokensPerATT();
+            if (AnotherTokenFourth(path[1])== tokenATF)
+                amount = amountIn*tokenLTF.tokensPerATF();
+            if (path[1] == tokenUSDS)
+                amount = amountIn*tokenLTF.tokensPerUSDS();
+        }
+
+        if (path[0] == tokenUSDS) {
+            if (MyTokenSecond(path[1]) == tokenMTS)
+                amount = amountIn*tokenMTS.tokensPerUSDS();
+            if (MyTokenFirst(path[1]) == tokenMTF) 
+                amount = amountIn*tokenMTF.tokensPerUSDS();
+            if (AnotherTokenThird(path[1]) == tokenATT)
+                amount = amountIn*tokenATT.tokensPerUSDS();
+            if (AnotherTokenFourth(path[1])== tokenATF)
+                amount = amountIn*tokenATF.tokensPerUSDS();
+            if (LastTokenFifth(path[1]) == tokenLTF)
+                amount = amountIn*tokenLTF.tokensPerUSDS();
+        }
     }
 }

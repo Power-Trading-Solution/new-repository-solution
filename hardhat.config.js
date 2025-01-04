@@ -1,6 +1,5 @@
 require("@nomicfoundation/hardhat-toolbox");
-require('hardhat-deploy');
-require("hardhat-deploy-ethers");
+require("@nomicfoundation/hardhat-ignition-ethers");
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
