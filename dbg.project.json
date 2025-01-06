@@ -1,0 +1,13 @@
+{
+    "contractsDir": "contracts-dbg",
+    "selectedContract": "Manager",
+    "autoOpen": true,
+    "breakOnEntry": false,
+    "symbols": {
+        "hardhat": {
+            "projectPaths": [
+                "c:\\Users\\turen\\OneDrive\\Документы\\4-course\\social-trading-new"
+            ]
+        }
+    }
+}

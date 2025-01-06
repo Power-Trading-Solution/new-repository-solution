@@ -5,12 +5,11 @@ const path = require('path');
 
 module.exports = buildModule("ManagerModule", (m) => {
 
-    // Определяем путь к файлу deployed_addresses.json
+   
     const filePath = path.join('../social-trading-new/ignition/deployments/chain-31337', 'deployed_addresses.json');
 
     var contractAddressFirst, contractAddressSecond, contractAddressThird, contractAddressFourth, contractAddressFifth, routerAddress, tokenUSDSAddress;
 
-    // Чтение файла
     fs.readFile(filePath, 'utf8', (err, data) => {
       if (err) {
           console.error('Ошибка чтения файла:', err);
@@ -18,29 +17,29 @@ module.exports = buildModule("ManagerModule", (m) => {
       }
 
       try {
-          // Парсинг JSON
+
           const addresses = JSON.parse(data);
 
           const router = 'SwapModule#Swap'; 
           
-          // Получаем адрес контракта по имени
-          const contractNameFirst = 'MyTokenFirstModule#MyTokenFirst';
-          const contractNameSecond = 'MyTokenSecondModule#MyTokenSecond'; 
-          const contractNameThird = 'AnotherTokenThirdModule#AnotherTokenThird';
-          const contractNameFourth = 'AnotherTokenFourthModule#AnotherTokenFourth'; 
-          const contractNameFifth = 'AnotherTokenFourthModule#AnotherTokenFourth'; 
+       
+          const tokenNameFirst = 'MyTokenFirstModule#MyTokenFirst';
+          const tokenNameSecond = 'MyTokenSecondModule#MyTokenSecond'; 
+          const tokenNameThird = 'AnotherTokenThirdModule#AnotherTokenThird';
+          const tokenNameFourth = 'AnotherTokenFourthModule#AnotherTokenFourth'; 
+          const tokenNameFifth = 'AnotherTokenFourthModule#AnotherTokenFourth'; 
           const tokenUSDSName = 'USDSModule#USDS';
-          contractAddressFirst = addresses[contractNameFirst];
-          contractAddressSecond = addresses[contractNameSecond];
-          contractAddressThird = addresses[contractNameThird];
-          contractAddressFourth = addresses[contractNameFourth];
-          contractAddressFifth = addresses[contractNameFifth];
+          contractAddressFirst = addresses[tokenNameFirst];
+          contractAddressSecond = addresses[tokenNameSecond];
+          contractAddressThird = addresses[tokenNameThird];
+          contractAddressFourth = addresses[tokenNameFourth];
+          contractAddressFifth = addresses[tokenNameFifth];
           tokenUSDSAddress = addresses[tokenUSDSName];
           routerAddress = addresses[router];
 
           if (contractAddressFirst) {
-              console.log(`Адрес контракта ${contractNameFirst}:`, contractAddressFirst);
-              console.log(`Адрес контракта ${contractNameSecond}:`, contractAddressSecond);
+              console.log(`Адрес контракта ${tokenNameFirst}:`, contractAddressFirst);
+              console.log(`Адрес контракта ${tokenNameSecond}:`, contractAddressSecond);
           } else {
               console.log(`Контракт ${contractName} не найден в файле.`);
           }

@@ -3,7 +3,7 @@ pragma solidity ^0.8.26;
 
 import "./MockERC20.sol";
 
-contract USDS is MockERC20 {
+contract ETH is MockERC20 {
 
     address public owner;
 
@@ -12,7 +12,7 @@ contract USDS is MockERC20 {
         _;
     }
 
-    constructor(uint256 initialSupply) MockERC20("USDS", "USDS", initialSupply) {
+    constructor(uint256 initialSupply) MockERC20("Ethereum", "ETH", initialSupply) {
         mint(msg.sender, initialSupply);
 
     }
