@@ -1,0 +1,36 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/UserRegistry.sol": {
+      "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.0;\r\n\r\ncontract UserRegistry {\r\n    struct UserInfo {\r\n        address userAddress;\r\n        uint256 commission; // Процент комиссии\r\n    }\r\n\r\n    UserInfo[] public users;\r\n    mapping(address => bool) private isRegistered;\r\n\r\n    // Добавление пользователя\r\n    function addUser(address _userAddress, uint256 _commission) external {\r\n        require(!isRegistered[_userAddress], \"User already registered\");\r\n        users.push(UserInfo({userAddress: _userAddress, commission: _commission}));\r\n        isRegistered[_userAddress] = true;\r\n    }\r\n\r\n    // Получение списка пользователей\r\n    function getUsers() external view returns (UserInfo[] memory) {\r\n        return users;\r\n    }\r\n}\r\n"
+    }
+  },
+  "settings": {
+    "evmVersion": "paris",
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}

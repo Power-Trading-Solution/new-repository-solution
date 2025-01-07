@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
 </script>
@@ -43,5 +43,41 @@ header {
     place-items: flex-start;
     flex-wrap: wrap;
   }
+}
+</style> -->
+
+
+
+<template>
+  <div id="app">
+    <Header />
+    <div class="main-content">
+      <router-view />
+    </div>
+  </div>
+</template>
+
+<script>
+import Header from './components/Header.vue';
+
+export default {
+  name: 'App',
+  components: {
+    Header,
+  },
+};
+</script>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+.main-content {
+  padding-top: 120px; /* Отступ, чтобы контент не перекрывался шапкой */
 }
 </style>
