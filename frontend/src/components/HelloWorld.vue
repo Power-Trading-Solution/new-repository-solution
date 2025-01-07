@@ -1150,7 +1150,7 @@
         
       },
       async makeTrust() {
-        ;
+        
 
         const result1 = await this.managerContract.trusts(this.address);
         console.log(result1)
