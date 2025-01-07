@@ -2,7 +2,7 @@
   <div class="container">
     <!-- Header with welcome message -->
     <div class="welcome">
-      <h1>Добро пожаловать в платформу</h1>
+      <h1>Добро пожаловать на платформу</h1>
       <p v-if="!connected">Подключите свой кошелек для продолжения.</p>
       <p v-if="connected">Привет, {{ address }}! Ваш баланс: {{ balance }} ETH</p>
     </div>
