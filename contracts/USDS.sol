@@ -6,6 +6,7 @@ import "./MockERC20.sol";
 contract USDS is MockERC20 {
 
     address public owner;
+    
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Not authorized");

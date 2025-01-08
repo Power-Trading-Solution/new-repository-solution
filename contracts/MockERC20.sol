@@ -19,7 +19,7 @@ contract MockERC20 {
     constructor(string memory _name, string memory _symbol, uint256 initialSupply) {
         name = _name;
         symbol = _symbol;
-        totalSupply = initialSupply * 10 ** uint256(decimals);
+        totalSupply = initialSupply * 1;
         balanceOf[msg.sender] = totalSupply;
     }
 

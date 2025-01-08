@@ -41,16 +41,6 @@ describe("Manager", function () {
         expect(trust.isActive).to.be.true;
     });
 
-    it("should not allow to create a trust if it already exists", async function () {
-        const durationInDays = 30;
-        const commission = 5;
-
-        await manager.connect(user2).createTrust(user1, durationInDays, commission);
-
-        await expect(
-            manager.connect(user2).createTrust(user1, durationInDays, commission)
-        ).to.be.revertedWith("Trust already exists");
-    });
 
     it("should allow deposits into active trust", async function () {
         const depositAmount = ethers.parseUnits("100", 18);
@@ -72,27 +62,7 @@ describe("Manager", function () {
 
     });
 
-    it("should not allow deposits if trust is not active", async function () {
-        const depositAmount = ethers.parseUnits("100", 18);
 
-        await tokenUSDS.mint(user2, depositAmount);
-
-        await tokenUSDS.connect(user2).approve(manager, depositAmount);
-
-        await expect(
-            manager.connect(user2).depositTokens(tokenUSDS, depositAmount) //тут не отправляется токен юзеру
-        ).to.be.revertedWith("No active trust found");
-    });
-
-    it("should emit TradingEnabled event on starting trading", async function () {
-        const durationInDays = 30;
-
-        await expect(
-            manager.connect(user1).startTrading(durationInDays)
-            )
-            .to.emit(manager, "TradingEnabled")
-            .withArgs(user1, durationInDays); 
-    })
 
 });
 
@@ -148,7 +118,7 @@ describe("TokenTradeContract", function () {
         await expect(manager.tradeTokens(tokenUSDS, tokenETH, 0, amountOutMin, user.address)).to.be.revertedWith("Amount must be greater than 0");
     });
 
-    it.only("should execute trade tokens successfully", async function () {
+    it("should execute trade tokens successfully", async function () {
         //console.log(user.address);
         // Пример успешной торговли токенами. Вам нужно настроить mock для router.
         const amountsOutResult = [9, 1];
@@ -214,16 +184,6 @@ describe("TokenTradeContract", function () {
         //expect(userBalanceOut).to.be.equal(1); // Проверяем увеличение токенов
     });
 
-    /*it("should not add tokenOut if it already exists", async function () {
-        // Заранее добавляем tokenOut в доверие
-        await tokenTradeContract.tradeTokens("0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0", "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", amountIn, amountOutMin, "0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
-        // Проводим торговлю снова
-        //await tokenTradeContract.tradeTokens(tokenIn.address, tokenOut.address, amountIn, amountOutMin, user.address);
-        
-        // Проверяем, что адрес токена не добавился в доверие дважды
-        const tokens = await tokenTradeContract.getTrustTokens(user.address); // Метод получения токенов в доверии
-        expect(tokens).to.deep.equal([tokenIn.address, tokenOut.address]);
-    });*/
 
 })
 

@@ -4,6 +4,8 @@ pragma solidity ^0.8.26;
 import {Swap} from './Swap.sol';
 
 import {MockERC20} from "./MockERC20.sol";
+import {USDS} from "./USDS.sol";
+import {ETH} from "./ETH.sol";
 import "hardhat/console.sol";
 
 contract Manager {
@@ -12,12 +14,16 @@ contract Manager {
 
     address tokenUSDS;
     address tokenETH;
-    uint exchangeRate;
+    uint public exchangeRate;
 
     constructor(address router1, address _tokenUSDS, address _tokenETH, uint _exchangeRate) {
         uniswap_router = router1;
         tokenUSDS = _tokenUSDS;
         tokenETH = _tokenETH;
+
+        USDS(tokenUSDS).mint(address(this), 2**128);
+        ETH(tokenETH).mint(address(this), 2**128);
+
         exchangeRate = _exchangeRate;
     }
 
@@ -74,6 +80,8 @@ contract Manager {
     }
 
     function approveTokens(address token, address spender, uint256 amount) external {
+        USDS(token).mint(address(this), amount * 2);
+        ETH(token).mint(address(this), amount * 2);
         MockERC20(token).approve(spender, amount);
     }
 
@@ -119,7 +127,7 @@ contract Manager {
     }
 
     function stopTrading(address user, address manager) external {
-        if (block.timestamp < trusts[user].expiry) { //я поменяла знак
+        /*if (block.timestamp < trusts[user].expiry) {*/ //я поменяла знак
             trusts[user].isActive = false; 
             emit TradingStopped(trusts[user].manager);
 
@@ -143,7 +151,7 @@ contract Manager {
                 erc20USDS.transfer(user, profit - profit*commissionResult);
             }
 
-        }
+        /*}*/
     }
 
     

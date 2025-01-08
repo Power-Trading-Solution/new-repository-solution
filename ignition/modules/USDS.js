@@ -1,7 +1,7 @@
 const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
 const { ethers } = require("hardhat")
 
-const initialSupply = ethers.parseUnits("1000000", 18);
+const initialSupply = ethers.parseUnits("10000", 18);
 
 module.exports = buildModule("USDSModule", (m) => {
   const initialSupplyParam = m.getParameter("initialSupply", initialSupply);

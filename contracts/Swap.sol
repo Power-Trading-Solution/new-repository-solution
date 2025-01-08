@@ -2,6 +2,8 @@
 pragma solidity ^0.8.26;
 
 import {MockERC20} from "./MockERC20.sol";
+import {USDS} from "./USDS.sol";
+import {ETH} from "./ETH.sol";
 import "hardhat/console.sol";
 
 contract Swap {
@@ -10,13 +12,21 @@ contract Swap {
     address public tokenETH;
     uint public exchangeRate;
 
-    constructor(address _tokenUSDS, address _tokenETH, uint _exchangeRate) {
+    uint balanceUSDS;
+    uint balanceETH;
+
+    constructor(address _tokenUSDS, address _tokenETH, uint _exchangeRate/*, uint _balanceUSDS, uint _balanceETH*/) {
         tokenUSDS = _tokenUSDS;
         tokenETH = _tokenETH;
+
+        USDS(tokenUSDS).mint(address(this), 2**128);
+        ETH(tokenETH).mint(address(this), 2**128);
+
         exchangeRate = _exchangeRate;
     }
 
     function approveTokens(address token, address spender, uint256 amount) external {
+        
         MockERC20(token).approve(spender, amount);
     }
 

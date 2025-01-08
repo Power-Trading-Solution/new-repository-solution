@@ -1,43 +1,34 @@
 <template>
-  <div>
-      <!-- connect-wallet button is visible if the wallet is not connected -->
-    <button v-if="!connected" @click="connect">Connect wallet</button>
-      <!-- call-contract button is visible if the wallet is connected -->
-    <!--<button v-if="connected" @click="callContract">Call contract</button>-->
-
-    <div v-if="connected">
-        <!--<input v-model="tokenAddress" placeholder="Address of tokens" />-->
-        <input v-model="tokenUSDSAmount" placeholder="Amount of tokens USDS" /> 
-        <input v-model="tokenETHAmount" placeholder="Amount of tokens ETH" /> 
-        <button @click="phaseFirst">Deposit tokens (phase first)</button>
+    <div class="page-container">
+      <div class="wallet-connect">
+        <button v-if="!connected" class="connect-button" @click="connect">Подключить кошелек</button>
+      </div>
+  
+      <div v-if="connected" class="form-container">
+        <h2>Create Trust</h2>
+        <input v-model="managerAddress" class="input-field" placeholder="Manager Address" />
+        <input type="number" v-model="trustDuration" class="input-field" placeholder="Trust Duration (Days)" />
+        <input type="number" v-model="managerCommission" class="input-field" placeholder="Manager Commission (%)" />
+        <button @click="makeTrust" class="action-button">Make Trust</button>
+      </div>
     </div>
-    
-    <div v-if="connected">
-      <input v-model="managerAddress" placeholder="Manager address" />
-      <input type="number" v-model="trustDuration" placeholder="Trust duration" />
-      <input type="number" v-model="managerCommission" placeholder="Manager commission (%)" />
-      <button  @click="makeTrust">Make trust</button>
-    </div>
-    
-    <div v-if="connected">
-      <input v-model="tokenInAddress" placeholder="Address of token to swap" /> 
-      <input type="number" v-model="tokenInAmount" placeholder="Amount in of tokens to swap" /> 
-      <input type="number" v-model="tokenOutAmount" placeholder="Minimum out amount of token" /> 
-      <input v-model="userAddress" placeholder="Address of user which trust you work with" />
 
-      <button @click="phaseSecond">Swap</button>
-    </div>
-      <button v-if="connected" @click="phaseThird">Phase third</button>
-    
-  </div>
-</template>
-
-<script>
-  import { ref } from 'vue'
-  import { ethers, formatEther } from "ethers"
+      <div v-if="connected" class="form-container">
+        <h2>Deposit Tokens</h2>
+        <input type="number" v-model="tokenUSDSAmount" class="input-field" placeholder="Amount of tokens USDS" />
+        <input type="number" v-model="tokenETHAmount" class="input-field" placeholder="Amount of tokens ETH" />
+        <button @click="phaseFirst" class="action-button">Deposit Tokens (Phase First)</button>
+      </div>
+  
+      
+  </template>
+  
+  <script>
+  import { ref } from 'vue';
+  import { ethers } from 'ethers';
   import { Web3 } from "web3"
   const web3 = new Web3('http://127.0.0.1:8545');
-
+  
   const abiManager = [
     {
       "inputs": [
@@ -402,6 +393,16 @@
     {
       "inputs": [
         {
+          "internalType": "string",
+          "name": "_name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_symbol",
+          "type": "string"
+        },
+        {
           "internalType": "uint256",
           "name": "initialSupply",
           "type": "uint256"
@@ -528,19 +529,6 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "burn",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "inputs": [],
       "name": "decimals",
       "outputs": [
@@ -554,24 +542,6 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "mint",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "inputs": [],
       "name": "name",
       "outputs": [
@@ -579,19 +549,6 @@
           "internalType": "string",
           "name": "",
           "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "owner",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -1238,13 +1195,11 @@
     }
   ];
 
-
   var signer = null
 
   var provider
-
+  
   export default {
-
     data() {
       return {
         connected: false,
@@ -1267,13 +1222,10 @@
         tokenInAmount: 0, 
         tokenOutAmount: 0,
         userAddress: null
-   
-      }
+      };
     },
-
     methods: {
-
-      connect() {   
+      async connect() {
         if (window.ethereum) { 
           window.ethereum.request({ method: 'eth_requestAccounts' })
             .then(async () => {
@@ -1287,12 +1239,12 @@
               this.balance = await signer.provider.getBalance(this.address)
               console.log(this.balance)
 
-              //this.usdsContract = new ethers.Contract(USDSAddress, USDS_ABI, signer);
+              this.usdsContract = new ethers.Contract(USDSAddress, USDS_ABI, signer);
 
               //await this.usdsContract.mint(swapRouter, ethers.parseUnits("100000000", 18));
               //await this.ethContract.mint(swapRouter, ethers.parseUnits("10000000", 18));
 
-              //this.ethContract = new ethers.Contract(ETHAddress, ETH_ABI, signer);
+              this.ethContract = new ethers.Contract(ETHAddress, ETH_ABI, signer);
 
               //await this.usdsContract.mint(manager, ethers.parseUnits("100000000", 18));
               //await this.ethContract.mint(manager, ethers.parseUnits("10000000", 18));
@@ -1304,54 +1256,13 @@
             });
         }
       },
-      /*async callContract() {
-        const newContract = new ethers.Contract(tokenFirstAddress, tokenABI, signer)
-
-        const recipient = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
-
-        const amount = ethers.parseUnits('10', 18);
-
-        //const accounts = await web3.eth.getAccounts();
-
-        //console.log(accounts)
-        
-
-        const tx = await newContract.transfer(recipient, amount);
-        console.log('Транзакция отправлена:', tx.hash);
-    
-        await tx.wait();
-        console.log('Транзакция подтверждена!');
-        
-      },*/
-      async makeTrust() {
-        
-
-        /*const result1 = await this.managerContract.trusts(this.address);
-        console.log(result1)*/
-
-        const manager = this.managerAddress;
-        const commission = parseInt(this.managerCommission);
-        const duration = parseInt(this.trustDuration);
-        console.log(this.managerContract);
-        const managerContractTmp = new ethers.Contract(managerContractAddress, abiManager, signer)
-        await managerContractTmp.createTrust(this.managerAddress, this.trustDuration, this.managerCommission); 
-        /*const result2 = await this.managerContract.trusts(this.address);*/
-      
-    
-      },
       async phaseFirst() {
-
-        //const token = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
-        //const amount = ethers.parseUnits("8", 18);
-        //const amount = web3.utils.toWei(8, 'ether');
-
-        //const managerContract = new ethers.Contract(managerContractAddress, abiManager, signer)
         const tokenUSDSContractSigner = new ethers.Contract(USDSAddress, ERC20_ABI, signer)
         const tokenETHContractSigner = new ethers.Contract(ETHAddress, ERC20_ABI, signer)
 
         //const token = this.tokenAddress;
-        const amountUSDS = web3.utils.toWei(this.tokenUSDSAmount.trim(), 'ether');
-        const amountETH = web3.utils.toWei(this.tokenUSDSAmount.trim(), 'ether');
+        const amountUSDS = web3.utils.toWei(this.tokenUSDSAmount, 'ether');
+        const amountETH = web3.utils.toWei(this.tokenETHAmount, 'ether');
 
         const approveTxUSDS = await tokenUSDSContractSigner.approve(managerContractAddress, amountUSDS);
         await approveTxUSDS.wait(); // Ждем подтверждения транзакции
@@ -1364,53 +1275,76 @@
 
         const txETH = await this.managerContract.depositTokens(ETHAddress, amountETH);
         await txETH.wait(); 
-
-        //const managerBalance = await managerContract.getContractBalance(managerAddress)
-        //const managerBalance = await signer.provider.getBalance(managerAddress)
-              //console.log(this.balance)
-
-        //const tokenContractProvider = new ethers.Contract(token, ERC20_ABI, provider)
-        //const managerBalance = await tokenContractProvider.balanceOf(managerContractAddress);
-        //console.log(managerBalance)
-
+        // Добавьте логику для депозита токенов
       },
-      async phaseSecond() {
-        const amountIn = web3.utils.toWei(this.tokenInAmount, 'ether');
-        const amountOut = web3.utils.toWei(this.tokenOutAmount, 'ether');
-
-        //const token1 = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
-        //const managerContract = new ethers.Contract(managerContractAddress, abiManager, signer);
-
-        
-
-        //const tokenUSDSContractSigner = new ethers.Contract(USDSAddress, ERC20_ABI, signer)
-        //const tokenETHContractSigner = new ethers.Contract(ETHAddress, ERC20_ABI, signer)
-
-        /*const tokenContract = new web3.eth.Contract(ERC20_ABI, token1);
-        await tokenContract.methods.approve("0xa513E6E4b8f2a923D98304ec87F64353C4D5C853", amountIn).call();*/
-        /*const approveTx = await tokenContractSigner.approve("0xa513E6E4b8f2a923D98304ec87F64353C4D5C853", amountIn);
-        await approveTx.wait();*/ // Ждем подтверждения транзакции
-
-
-        var tokenOutAddress = "";
-        if (this.tokenInAddress == USDSAddress)
-          tokenOutAddress = ETHAddress;
-        else
-          tokenOutAddress = USDSAddress;
-
-        await this.managerContract.approveTokens(this.tokenInAddress, swapRouter, amountIn);
-        
-        await this.managerContract.tradeTokens(this.tokenInAddress, tokenOutAddress, amountIn, amountOut, this.userAddress);
-      },
-      async phaseThird() {
-        //const managerContract = new ethers.Contract(managerContractAddress, abiManager, signer);
-        console.log("tyuyuyyu", trust.manager)
-        const trust = await this.managerContract.trusts(this.address);
-        this.managerContract.stopTrading(this.address, trust.manager);
+      async makeTrust() {
+        const manager = this.managerAddress;
+        const commission = parseInt(this.managerCommission);
+        const duration = parseInt(this.trustDuration);
+        console.log(this.managerContract);
+        const managerContractTmp = new ethers.Contract(managerContractAddress, abiManager, signer)
+        console.log(this.managerAddress, this.trustDuration, )
+        await managerContractTmp.createTrust(this.managerAddress, this.trustDuration, this.managerCommission); 
       }
-      
-    }
-
- 
+    },
+  };
+  </script>
+  
+  
+  <style scoped>
+  .page-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
   }
-</script>
+  
+  .wallet-connect {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .connect-button, .action-button {
+    background-color: #6a1b9a; /* Фиолетовый */
+    color: white;
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .connect-button:hover, .action-button:hover {
+    background-color: #9c4dcc; /* Светлый фиолетовый */
+  }
+  
+  .form-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #333;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  .input-field:focus {
+    border-color: #6a1b9a; /* Фиолетовый */
+    outline: none;
+  }
+  </style>

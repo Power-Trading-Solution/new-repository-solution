@@ -27,13 +27,7 @@ module.exports = buildModule("SwapModule", (m) => {
     
           ETHAddress = addresses[ethName];
           USDSAddress = addresses[usdsName];
-
-          /*if (contractAddressFirst) {
-              console.log(`Адрес контракта ${contractNameFirst}:`, contractAddressFirst);
-              console.log(`Адрес контракта ${contractNameSecond}:`, contractAddressSecond);
-          } else {
-              console.log(`Контракт ${contractName} не найден в файле.`);
-          }*/
+          
       } catch (parseErr) {
           console.error('Ошибка парсинга JSON:', parseErr);
       }
