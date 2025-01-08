@@ -4,20 +4,20 @@
       <h1>Social Trading</h1>
     </div>
     <nav>
-      <ul>
-        <li>
-          <router-link to="/">Главная</router-link>
-        </li>
-        <li>
-          <router-link to="/ethereum-chart">Мониторинг Ethereum</router-link>
-        </li>
-        <li>
-          <router-link to="/investor-page">Инвестору</router-link>
-        </li>
-        <li>
-          <router-link to="/swap-page">Менеджеру</router-link>
-        </li>
-      </ul>
+        <ul>
+          <li>
+            <router-link to="/">Home</router-link>
+          </li>
+          <li>
+            <router-link to="/ethereum-chart">Ethereum Monitoring</router-link>
+          </li>
+          <li>
+            <router-link to="/investor-page">For Investor</router-link>
+          </li>
+          <li>
+            <router-link to="/swap-page">For Manager</router-link>
+          </li>
+        </ul>
     </nav>
   </header>
 </template>

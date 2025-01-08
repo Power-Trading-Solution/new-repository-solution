@@ -1,16 +1,16 @@
 <template>
-    <div class="eth-chart-page">
-      <h2>График и курс Эфириума</h2>
-      
-      <div class="buttons">
-        <button @click="changePeriod('1')">День</button>
-        <button @click="changePeriod('30')">Месяц</button>
-        <button @click="changePeriod('365')">Год</button>
-      </div>
-      
-      <canvas ref="ethChart"></canvas>
+  <div class="eth-chart-page">
+    <h2>Ethereum Chart and Rate</h2>
+    
+    <div class="buttons">
+      <button @click="changePeriod('1')">Day</button>
+      <button @click="changePeriod('30')">Month</button>
+      <button @click="changePeriod('365')">Year</button>
     </div>
-  </template>
+    
+    <canvas ref="ethChart"></canvas>
+  </div>
+</template>
   
   <script setup>
   import { onMounted, ref } from 'vue';

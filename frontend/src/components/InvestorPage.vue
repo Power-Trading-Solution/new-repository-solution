@@ -1,12 +1,12 @@
 <template>
   <div class="page-container">
     <div class="welcome-text">
-      <h1>Инвестору</h1>
-      <p>Здесь вы можете создать доверие, внести токены и остановить торговлю. Подключите свой кошелек для продолжения.</p>
-    </div>
+    <h1>For Investor</h1>
+    <p>Here you can create a trust, deposit tokens, and stop trading. Connect your wallet to continue.</p>
+  </div>
 
     <div class="wallet-connect">
-      <button v-if="!connected" class="connect-button" @click="connect">Подключить кошелек</button>
+      <button v-if="!connected" class="connect-button" @click="connect">Connect Wallet</button>
     </div>
 
     <div v-if="connected" class="form-container">

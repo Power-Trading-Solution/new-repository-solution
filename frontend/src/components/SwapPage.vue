@@ -1,12 +1,12 @@
 <template>
   <div class="page-container">
     <div class="welcome-text">
-      <h1>Менеджеру</h1>
-      <p>Здесь вы можете обменять токены для дальнейшей работы с ними на платформе. Введите адрес токена, который вы хотите обменять, и количество.</p>
-    </div>
+    <h1>For Manager</h1>
+    <p>Here you can swap tokens for further work on the platform. Enter the address of the token you want to swap and the amount.</p>
+  </div>
 
     <div class="wallet-connect">
-      <button v-if="!connected" class="connect-button" @click="connect">Подключить кошелек</button>
+      <button v-if="!connected" class="connect-button" @click="connect">Connect Wallet</button>
     </div>
 
     <div v-if="connected" class="form-container">

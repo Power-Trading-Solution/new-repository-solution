@@ -2,36 +2,37 @@
   <div class="container">
     <!-- Header with welcome message -->
     <div class="welcome">
-      <h1>Добро пожаловать на платформу</h1>
-      <p v-if="!connected">Подключите свой кошелек для продолжения.</p>
-      <p v-if="connected">Привет, {{ address }}! Ваш баланс: {{ balance }} ETH</p>
+      <h1>Welcome to the Platform</h1>
+      <p v-if="!connected">Connect your wallet to continue.</p>
+      <p v-if="connected">Hello, {{ address }}!</p>
+      <p v-if="connected">Your balance: {{ balance }} ETH</p>
     </div>
 
     <!-- Connect wallet button -->
     <div class="button-container">
-      <button v-if="!connected" @click="connect" class="connect-button">Подключить кошелек</button>
+      <button v-if="!connected" @click="connect" class="connect-button">Connect Wallet</button>
     </div>
     
     <!-- User info and manager registration form -->
     <div v-if="connected" class="user-info">
-      <h3>Хотите стать менеджером?</h3>
-      <p>Если вы хотите добавить себя в список менеджеров, введите комиссию в процентах и нажмите "Добавить".</p>
+      <h3>Want to Become a Manager?</h3>
+      <p>If you want to add yourself to the manager list, enter the commission percentage and click "Add."</p>
       
       <form @submit.prevent="addUser" class="form">
-        <label for="commission">Комиссия (%):</label>
-        <input type="number" v-model="newCommission" id="commission" required class="input" placeholder="Введите комиссию" />
-        <button type="submit" class="submit-button">Добавить</button>
+        <label for="commission">Commission (%):</label>
+        <input type="number" v-model="newCommission" id="commission" required class="input" placeholder="Enter commission" />
+        <button type="submit" class="submit-button">Add</button>
       </form>
 
       <!-- List of users -->
       <div v-if="users.length" class="user-list">
-        <h3>Список менеджеров:</h3>
+        <h3>Manager List:</h3>
         <table>
           <thead>
             <tr>
-              <th>№</th>
+              <th>#</th>
               <th>Address</th>
-              <th>Комиссия (%)</th>
+              <th>Commission (%)</th>
             </tr>
           </thead>
           <tbody>
@@ -46,6 +47,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import { ref } from 'vue';
@@ -237,6 +239,7 @@ export default {
   background-color: #6f42c1; /* Фиолетовый цвет */
   color: white;
   border: none;
+  width: 100%;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -319,6 +322,7 @@ p {
 
 .submit-button {
   background-color: #6f42c1; /* Фиолетовый цвет */
+  margin-top: 15px;
   color: white;
   width: 100%;
   padding: 12px;
