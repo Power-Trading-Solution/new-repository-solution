@@ -61,7 +61,7 @@
           label: 'График Эфириума',
           data: ethPrices.value.map(price => price.value),
           borderColor: '#794ee6',
-          backgroundColor: 'rgba(121, 78, 230, 0.2)',
+          backgroundColor: 'rgba(166, 138, 237, 0.2)',
           tension: 0.1,
           pointRadius: 1.5,  // Уменьшаем размер точек
         }]
@@ -134,7 +134,7 @@
   <style scoped>
   .eth-chart-page {
     padding: 20px;
-    background-color: #20153c;
+    background-color: #352465;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     color: white;

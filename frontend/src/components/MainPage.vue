@@ -53,28 +53,80 @@ import { ethers } from 'ethers';
 
 const abi = [
     {
-      "inputs": [], "stateMutability": "nonpayable", "type": "constructor"
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
     },
     {
       "inputs": [
-        { "internalType": "address", "name": "_userAddress", "type": "address" },
-        { "internalType": "uint256", "name": "_commission", "type": "uint256" }
-      ], "name": "addUser", "outputs": [], "stateMutability": "nonpayable", "type": "function"
+        {
+          "internalType": "address",
+          "name": "_userAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_commission",
+          "type": "uint256"
+        }
+      ],
+      "name": "addUser",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-      "inputs": [], "name": "getUsers", "outputs": [
-        { "components": [{ "internalType": "address", "name": "userAddress", "type": "address" }, { "internalType": "uint256", "name": "commission", "type": "uint256" }], "internalType": "struct UserRegistry.UserInfo[]", "name": "", "type": "tuple[]" }
-      ], "stateMutability": "view", "type": "function"
+      "inputs": [],
+      "name": "getUsers",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "userAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "commission",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct UserRegistry.UserInfo[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-      "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "name": "users", "outputs": [
-        { "internalType": "address", "name": "userAddress", "type": "address" }, 
-        { "internalType": "uint256", "name": "commission", "type": "uint256" }
-      ], "stateMutability": "view", "type": "function"
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "users",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "userAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "commission",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
     }
-];
+  ];
 
-const contractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3';
+const contractAddress = '0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44';
 
 export default {
   data() {

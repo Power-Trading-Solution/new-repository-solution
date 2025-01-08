@@ -6,8 +6,7 @@ const path = require('path');
 module.exports = buildModule("SwapModule", (m) => {
 
     // Определяем путь к файлу deployed_addresses.json
-    const filePath = path.join('../social-trading-new/ignition/deployments/chain-31337', 'deployed_addresses.json');
-
+    const filePath = path.join('../new-repository-solution/ignition/deployments/chain-31337', 'deployed_addresses.json');
     var USDSAddress, ETHAddress;
 
     // Чтение файла

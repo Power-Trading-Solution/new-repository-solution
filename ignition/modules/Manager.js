@@ -5,7 +5,7 @@ const path = require('path');
 
 module.exports = buildModule("ManagerModule", (m) => {
    
-    const filePath = path.join('../social-trading-new/ignition/deployments/chain-31337', 'deployed_addresses.json');
+    const filePath = path.join('../new-repository-solution/ignition/deployments/chain-31337', 'deployed_addresses.json');
 
     var USDSAddress, ETHAddress, routerAddress;
 

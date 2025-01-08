@@ -15,7 +15,7 @@
           <router-link to="/investor-page">Инвестору</router-link>
         </li>
         <li>
-          <router-link to="/swap-page">Обмен</router-link>
+          <router-link to="/swap-page">Менеджеру</router-link>
         </li>
       </ul>
     </nav>
