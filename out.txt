@@ -1,0 +1,4 @@
+﻿Выгрузка внешней обработки или отчета в XML.
+Входной бинарный файл: C:\Users\turen\OneDrive\Документы\4-course\вкр\test_clone\new-repository-solution\PMM.epf
+Каталог или корневой файл выгрузки: C:\Users\turen\OneDrive\Документы\4-course\вкр\test_clone\new-repository-solution\НоваяПапка
+Формат: Иерархический
